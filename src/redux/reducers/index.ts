@@ -1,4 +1,4 @@
-import { ADD_FORM_DATA } from '../actions';
+import { ADD_FORM_DATA, ADD_FORM_DATAPRO } from '../actions';
 
 const initialState = {
   personalData: {
@@ -21,7 +21,12 @@ const rootReducer = (state = initialState, action: any) => {
     case ADD_FORM_DATA:
       return {
         ...state,
-        formData: action.payload,
+        personalData: action.payload,
+      };
+    case ADD_FORM_DATAPRO:
+      return {
+        ...state,
+        professionalData: action.payload,
       };
     default:
       return state;

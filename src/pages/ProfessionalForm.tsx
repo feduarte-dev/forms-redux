@@ -1,18 +1,23 @@
 import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-
 import Input from '../components/Input';
 import TextArea from '../components/TextArea';
 import Button from '../components/Button';
+import { addFormDataPro } from '../redux/actions';
+
+const INITIAL_STATE = {
+  resume: '',
+  role: '',
+  description: '',
+};
 
 function ProfessionalForm() {
-  const [form, setForm] = useState({
-    resume: '',
-    role: '',
-    description: '',
-  });
+  const [form, setForm] = useState(INITIAL_STATE);
   const [disableBtn, setDisableBtn] = useState<boolean>(true);
   const { resume, role, description } = form;
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const btnCheck = () => {
@@ -30,13 +35,12 @@ function ProfessionalForm() {
     setForm({ ...form, [name]: value });
   };
 
+  const handleClick = () => {
+    dispatch(addFormDataPro(form));
+  };
+
   return (
-    <form
-      onSubmit={ (e) => {
-        e.preventDefault();
-        console.log('Ao clicar, envie a informação do formulário');
-      } }
-    >
+    <form>
       <h1 className="title">Informações Profissionais</h1>
       <TextArea
         label="Resumo do currículo: "
@@ -64,7 +68,8 @@ function ProfessionalForm() {
       />
       <Link to="/form-display">
         <Button
-          type="submit"
+          onClick={ handleClick }
+          type="button"
           label="Enviar"
           moreClasses="is-fullwidth is-info"
           disabled={ disableBtn }

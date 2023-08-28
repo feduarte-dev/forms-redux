@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -16,21 +16,21 @@ const UF_LIST = [
   'Distrito Federal',
 ];
 
+const INITIAL_STATE = {
+  name: '',
+  email: '',
+  cpf: '',
+  address: '',
+  city: '',
+  uf: '',
+};
+
 function PersonalForm() {
-  const [form, setForm] = useState({
-    name: '',
-    email: '',
-    cpf: '',
-    address: '',
-    city: '',
-    uf: '',
-  });
+  const [form, setForm] = useState(INITIAL_STATE);
   const [disableBtn, setDisableBtn] = useState<boolean>(true);
   const { name, email, cpf, address, city, uf } = form;
 
-  const formData = useSelector((state: any) => state.formData);
   const dispatch = useDispatch();
-  console.log(formData);
 
   useEffect(() => {
     const btnCheck = () => {
@@ -46,16 +46,12 @@ function PersonalForm() {
     setForm({ ...form, [targetName]: value });
   };
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
+  const handleClick = () => {
     dispatch(addFormData(form));
-    console.log('Form data saved in Redux store:', form);
   };
 
   return (
-    <form
-      onSubmit={ handleSubmit }
-    >
+    <form>
       <h1 className="title">Informações Pessoais</h1>
       <Input
         label="Nome: "
@@ -107,7 +103,8 @@ function PersonalForm() {
       />
       <Link to="/professional-form">
         <Button
-          type="submit"
+          onClick={ handleClick }
+          type="button"
           label="Próximo"
           moreClasses="is-fullwidth is-info"
           disabled={ disableBtn }
