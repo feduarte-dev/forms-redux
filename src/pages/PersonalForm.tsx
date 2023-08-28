@@ -28,7 +28,7 @@ function PersonalForm() {
   const [disableBtn, setDisableBtn] = useState<boolean>(true);
   const { name, email, cpf, address, city, uf } = form;
 
-  const formData = useSelector((state: any) => state.personalReducer.formData);
+  const formData = useSelector((state: any) => state.formData);
   const dispatch = useDispatch();
   console.log(formData);
 
@@ -48,8 +48,7 @@ function PersonalForm() {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    // Dispatch action to add form data to Redux store
-    dispatch(addFormData(form)); // Use 'form' here, not 'formData'
+    dispatch(addFormData(form));
     console.log('Form data saved in Redux store:', form);
   };
 
