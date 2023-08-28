@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import Input from '../components/Input';
 import TextArea from '../components/TextArea';
@@ -10,7 +11,15 @@ function ProfessionalForm() {
     role: '',
     description: '',
   });
+  const [disableBtn, setDisableBtn] = useState<boolean>(true);
   const { resume, role, description } = form;
+
+  useEffect(() => {
+    const btnCheck = () => {
+      setDisableBtn(!(resume && role && description));
+    };
+    btnCheck();
+  }, [resume, role, description]);
 
   const handleChange = (
     { target }: React.ChangeEvent<
@@ -53,11 +62,14 @@ function ProfessionalForm() {
         value={ description }
         required
       />
-      <Button
-        type="submit"
-        label="Enviar"
-        moreClasses="is-fullwidth is-info"
-      />
+      <Link to="/form-display">
+        <Button
+          type="submit"
+          label="Enviar"
+          moreClasses="is-fullwidth is-info"
+          disabled={ disableBtn }
+        />
+      </Link>
     </form>
   );
 }

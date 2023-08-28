@@ -1,8 +1,10 @@
-import { useState } from 'react';
-
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import Select from '../components/Select';
+import { addFormData } from '../redux/actions';
 
 const UF_LIST = [
   'Rio de Janeiro',
@@ -23,7 +25,19 @@ function PersonalForm() {
     city: '',
     uf: '',
   });
+  const [disableBtn, setDisableBtn] = useState<boolean>(true);
   const { name, email, cpf, address, city, uf } = form;
+
+  const formData = useSelector((state: any) => state.personalReducer.formData);
+  const dispatch = useDispatch();
+  console.log(formData);
+
+  useEffect(() => {
+    const btnCheck = () => {
+      setDisableBtn(!(name && email && cpf && address && city && uf));
+    };
+    btnCheck();
+  }, [name, email, cpf, address, city, uf]);
 
   const handleChange = (
     { target }: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -32,12 +46,16 @@ function PersonalForm() {
     setForm({ ...form, [targetName]: value });
   };
 
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    // Dispatch action to add form data to Redux store
+    dispatch(addFormData(form)); // Use 'form' here, not 'formData'
+    console.log('Form data saved in Redux store:', form);
+  };
+
   return (
     <form
-      onSubmit={ (e) => {
-        e.preventDefault();
-        console.log('Ao clicar, envie a informação do formulário');
-      } }
+      onSubmit={ handleSubmit }
     >
       <h1 className="title">Informações Pessoais</h1>
       <Input
@@ -88,11 +106,14 @@ function PersonalForm() {
         name="uf"
         options={ UF_LIST }
       />
-      <Button
-        type="submit"
-        label="Próximo"
-        moreClasses="is-fullwidth is-info"
-      />
+      <Link to="/professional-form">
+        <Button
+          type="submit"
+          label="Próximo"
+          moreClasses="is-fullwidth is-info"
+          disabled={ disableBtn }
+        />
+      </Link>
     </form>
   );
 }
